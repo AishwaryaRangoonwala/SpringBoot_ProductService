@@ -1,4 +1,4 @@
-package com.aishwarya.SpringBoot_ProductService.dtos;
+package com.aishwarya.SpringBoot_ProductService.dtos.products;
 
 import com.aishwarya.SpringBoot_ProductService.models.Product;
 import lombok.Getter;

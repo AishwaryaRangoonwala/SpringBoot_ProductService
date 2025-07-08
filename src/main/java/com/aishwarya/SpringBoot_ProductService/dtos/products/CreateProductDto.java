@@ -1,4 +1,4 @@
-package com.aishwarya.SpringBoot_ProductService.dtos;
+package com.aishwarya.SpringBoot_ProductService.dtos.products;
 
 import com.aishwarya.SpringBoot_ProductService.models.Product;
 import lombok.Getter;
@@ -6,21 +6,30 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CreateProductResponseDto {
+public class CreateProductDto {
     private Long id;
     private String title;
     private String description;
     private Double price;
     private String imageUrl;
 
-    public static CreateProductResponseDto fromProduct(Product product) {
-        CreateProductResponseDto responseDto = new CreateProductResponseDto();
+    public static CreateProductDto fromProduct(Product product) {
+        CreateProductDto responseDto = new CreateProductDto();
         responseDto.setId(product.getId());
         responseDto.setDescription(product.getDescription());
         responseDto.setTitle(product.getTitle());
         responseDto.setPrice(product.getPrice());
         responseDto.setImageUrl(product.getImageUrl());
         return responseDto;
+    }
+
+    public Product toProduct() {
+        Product product = new Product();
+        product.setId(this.getId());
+        product.setTitle(this.getTitle());
+        product.setDescription(this.getDescription());
+        product.setPrice(this.getPrice());
+        return product;
     }
 
     public Long getId() {

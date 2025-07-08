@@ -1,5 +1,6 @@
-package com.aishwarya.SpringBoot_ProductService.dtos;
+package com.aishwarya.SpringBoot_ProductService.dtos.fakestore;
 
+import com.aishwarya.SpringBoot_ProductService.models.Product;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,6 +12,16 @@ public class FakeStoreCreateProductRequestDTO {
     private String image;
     private String description;
     private String category;
+
+    public static FakeStoreCreateProductRequestDTO from(Product product) {
+        FakeStoreCreateProductRequestDTO fakeStoreCreateProductRequestDTO = new FakeStoreCreateProductRequestDTO();
+        fakeStoreCreateProductRequestDTO.title = product.getTitle();
+        fakeStoreCreateProductRequestDTO.price = product.getPrice();
+        fakeStoreCreateProductRequestDTO.image = product.getImageUrl();
+        fakeStoreCreateProductRequestDTO.description = product.getDescription();
+        fakeStoreCreateProductRequestDTO.category = product.getCategoryName();
+        return fakeStoreCreateProductRequestDTO;
+    }
 
     public String getTitle() {
         return title;

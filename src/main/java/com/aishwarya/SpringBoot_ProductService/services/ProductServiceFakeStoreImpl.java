@@ -1,12 +1,19 @@
 package com.aishwarya.SpringBoot_ProductService.services;
 
-import com.aishwarya.SpringBoot_ProductService.dtos.FakeStoreCreateProductRequestDTO;
-import com.aishwarya.SpringBoot_ProductService.dtos.FakeStoreCreateProductResponseDto;
+import com.aishwarya.SpringBoot_ProductService.dtos.fakestore.FakeStoreCreateProductRequestDTO;
+import com.aishwarya.SpringBoot_ProductService.dtos.fakestore.FakeStoreGetProductResponseDto;
 import com.aishwarya.SpringBoot_ProductService.models.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
 
 @Service("fakeStoreProductService")
 @Primary
@@ -27,19 +34,52 @@ public class ProductServiceFakeStoreImpl implements ProductService {
         request.setImage(product.getImageUrl());
         request.setPrice(product.getPrice());
         request.setDescription(product.getDescription());
-        FakeStoreCreateProductResponseDto response = restTemplate.postForObject(
+        FakeStoreGetProductResponseDto response = restTemplate.postForObject(
                 "https://fakestoreapi.com/products",
                 request,
-                FakeStoreCreateProductResponseDto.class
+                FakeStoreGetProductResponseDto.class
         );
-        Product product1 = new Product();
-        product1.setId(response.getId());
-        product1.setTitle(response.getTitle());
-        product1.setDescription(response.getDescription());
-        product1.setImageUrl(response.getImage());
-        product1.setCategoryName(request.getCategory());
-        product1.setPrice(response.getPrice());
 
-        return product1;
+
+        return response.toProduct();
+    }
+
+    @Override
+    public List<Product> getAllProducts() {
+        // Type Erasure
+        // Java Generics; it does not know how to convert to List
+        // List does not work; but array works
+        // At the time of runtime, info present in the angular brackets is removed
+        // i.e from List<FakeStoreGetProductResponseDto> FakeStoreProductResponseDto is removed
+        // Java did that to maintain backward compatibility
+        // At runtime, it became List<Object>
+        // Code needs to convert it JSON to List<FakeStore>
+        // But at runtime; it won't know object of what
+
+        FakeStoreGetProductResponseDto[] response =
+                restTemplate.getForObject(
+                "https://fakestoreapi.com/products",
+                FakeStoreGetProductResponseDto[].class
+        );
+        List<FakeStoreGetProductResponseDto> responseDtoList =
+                Stream.of(response).toList();
+        List<Product> products = new ArrayList<>();
+        for (FakeStoreGetProductResponseDto fakeStoreGetProductResponseDto : responseDtoList) {
+            products.add(fakeStoreGetProductResponseDto.toProduct());
+        }
+        return products;
+    }
+
+    @Override
+    public Product partialUpdateProduct(Long productId, Product product) {
+        new RuntimeException();
+//        HttpEntity<FakeStoreCreateProductRequestDTO> requestEntity = new HttpEntity<>(FakeStoreCreateProductRequestDTO);
+//        ResponseEntity<FakeStoreGetProductResponseDto> responseEntity = restTemplate.exchange(
+//                "https://fakestoreapi.com/products" + productId,
+//                HttpMethod.PATCH,
+//                requestEntity,
+//                FakeStoreGetProductResponseDto.class);
+//        return responseEntity.getBody().toProduct();
+        return null;
     }
 }

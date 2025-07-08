@@ -1,17 +1,29 @@
-package com.aishwarya.SpringBoot_ProductService.dtos;
+package com.aishwarya.SpringBoot_ProductService.dtos.fakestore;
 
+import com.aishwarya.SpringBoot_ProductService.models.Product;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class FakeStoreCreateProductResponseDto {
+public class FakeStoreGetProductResponseDto {
     private Long id;
     private String title;
     private Double price;
     private String description;
     private String category;
     private String image;
+
+    public Product toProduct() {
+        Product product = new Product();
+        product.setId(this.getId());
+        product.setTitle(this.getTitle());
+        product.setDescription(this.getDescription());
+        product.setImageUrl(this.getImage());
+        product.setCategoryName(this.getCategory());
+        product.setPrice(this.getPrice());
+        return product;
+    }
 
     public Long getId() {
         return id;
